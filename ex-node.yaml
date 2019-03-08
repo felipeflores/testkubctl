@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ex-node1svc
+  labels:
+    app: ex-node1
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    protocol: TCP
+    name: http
+  selector:
+    app: ex-node1
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: ex-node1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ex-node1
+    spec:
+      containers:
+      - name: ex-node1
+        image: ex-node:latest
+        ports:
+        - containerPort: 3000
