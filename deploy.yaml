@@ -1,0 +1,39 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: exNode
+        tier: api
+    spec:
+      containers:
+      - name: ex-node
+        image: node:8-alpine
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh","-c", "node", "servidor.js"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /usr/src/app
+          name: teste-volume12
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+          # If your cluster config does not include a dns service, then to
+          # instead access environment variables to find service host
+          # info, comment out the 'value: dns' line above, and uncomment the
+          # line below:
+          # value: env
+        ports:
+        - containerPort: 3000
+      volumes:
+      - hostPath:
+          path: dist
+        name: teste-volume12
